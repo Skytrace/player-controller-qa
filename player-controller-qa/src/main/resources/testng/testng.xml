@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Player API Test Suite" parallel="methods" thread-count="3">
+
+    <test name="Player Controller Tests">
+        <packages>
+            <package name="org.player.controller.qa"/>
+        </packages>
+    </test>
+
+</suite>
