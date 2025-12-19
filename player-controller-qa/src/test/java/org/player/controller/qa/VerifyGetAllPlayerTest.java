@@ -6,7 +6,6 @@ import org.player.controller.qa.dto.PlayerItem;
 import org.player.controller.qa.dto.Players;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,7 +14,7 @@ import static org.testng.Assert.*;
 import static org.testng.AssertJUnit.assertNotNull;
 
 
-public class VerifyPlayerTest extends BaseTest {
+public class VerifyGetAllPlayerTest extends BaseTest {
 
     @Test
     public void userDatabaseShouldNotBeEmpty() {
