@@ -1,4 +1,4 @@
-package config;
+package org.player.controller.qa.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
