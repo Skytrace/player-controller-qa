@@ -17,7 +17,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
 
     private Long createdPlayerUserId;
 
-    //TODO Think about password
+    //TODO Think about password and create via GET
     @Test(groups = "createPlayer")
     public void createPlayer() {
         CreatePlayer expectedPlayer = new CreatePlayer();
@@ -60,7 +60,6 @@ public class VerifyCreatePlayerTest extends BaseTest {
             httpClient.deletePlayer(createdPlayerUserId, "supervisor").then().statusCode(204);
             LOGGER.info("Test User with id - {}, successfully deleted", createdPlayerUserId);
         }
-
     }
 
 }
