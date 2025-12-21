@@ -4,6 +4,8 @@ import io.restassured.response.Response;
 import org.player.controller.qa.base.BaseTest;
 import org.player.controller.qa.dto.PlayerItem;
 import org.player.controller.qa.dto.Players;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import java.util.HashSet;
@@ -15,6 +17,7 @@ import static org.testng.AssertJUnit.assertNotNull;
 
 
 public class VerifyGetAllPlayerTest extends BaseTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(VerifyGetAllPlayerTest.class);
 
     @Test
     public void userDatabaseShouldNotBeEmpty() {
@@ -25,6 +28,8 @@ public class VerifyGetAllPlayerTest extends BaseTest {
         Players responseData = actualResult.as(Players.class);
         Assert.assertNotNull(responseData.getPlayers(), "Players list should not be null");
         assertTrue(responseData.getPlayers().size() > 0, "Players list should contain more than 1 element");
+
+        LOGGER.info("the total count of all players is: {}", responseData.getPlayers().size());
     }
 
     @Test

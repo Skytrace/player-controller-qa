@@ -96,7 +96,7 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>src/main/resources/testng/testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
-                    <parallel>methods</parallel>
+                    <parallel>classes</parallel>
                     <threadCount>3</threadCount>
                     <systemPropertyVariables>
                         <reporter.debug>false</reporter.debug>
