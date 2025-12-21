@@ -2,7 +2,7 @@ package org.player.controller.qa;
 
 import io.restassured.response.Response;
 import org.player.controller.qa.base.BaseTest;
-import org.player.controller.qa.dto.CreatePlayer;
+import org.player.controller.qa.dto.CreatePlayerRequestDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -19,7 +19,7 @@ public class VerifyDeletePlayerTest extends BaseTest {
 
     @Test
     public void deletePlayerById() {
-        CreatePlayer expectedPlayer = new CreatePlayer();
+        CreatePlayerRequestDto expectedPlayer = new CreatePlayerRequestDto();
         expectedPlayer.setAge(25);
         expectedPlayer.setGender("male");
         expectedPlayer.setLogin("testLoginUserDp");
@@ -31,7 +31,7 @@ public class VerifyDeletePlayerTest extends BaseTest {
         Response actualResult = httpClient.createPlayer(expectedPlayer, "supervisor");
         assertEquals(actualResult.getStatusCode(), 200, "Actual status code is not as expected");
 
-        CreatePlayer actualPlayer = actualResult.as(CreatePlayer.class);
+        CreatePlayerRequestDto actualPlayer = actualResult.as(CreatePlayerRequestDto.class);
         assertTrue(actualPlayer.getId() > 0, "Incorrect userId value");
 
         LOGGER.info("Actual test player has been created: {}", actualPlayer);
@@ -41,7 +41,7 @@ public class VerifyDeletePlayerTest extends BaseTest {
 
     @Test(groups = "deletePlayerByIdAsString")
     public void deletePlayerByIdAsString() {
-        CreatePlayer expectedPlayer = new CreatePlayer();
+        CreatePlayerRequestDto expectedPlayer = new CreatePlayerRequestDto();
         expectedPlayer.setAge(25);
         expectedPlayer.setGender("male");
         expectedPlayer.setLogin("testLoginUserDpByIdS");
@@ -53,7 +53,7 @@ public class VerifyDeletePlayerTest extends BaseTest {
         Response actualResult = httpClient.createPlayer(expectedPlayer, "supervisor");
         assertEquals(actualResult.getStatusCode(), 200, "Actual status code is not as expected");
 
-        CreatePlayer actualPlayer = actualResult.as(CreatePlayer.class);
+        CreatePlayerRequestDto actualPlayer = actualResult.as(CreatePlayerRequestDto.class);
         testPlayerLoginDpByIdS = actualPlayer.getId();
         LOGGER.info("Actual test player has been created: {}", actualPlayer);
 
@@ -72,7 +72,7 @@ public class VerifyDeletePlayerTest extends BaseTest {
 
     @Test
     public void deleteNonExistedPlayerById() {
-        CreatePlayer expectedPlayer = new CreatePlayer();
+        CreatePlayerRequestDto expectedPlayer = new CreatePlayerRequestDto();
         expectedPlayer.setAge(20);
         expectedPlayer.setGender("female");
         expectedPlayer.setLogin("testLoginUserDnepById");
@@ -84,7 +84,7 @@ public class VerifyDeletePlayerTest extends BaseTest {
         Response actualResult = httpClient.createPlayer(expectedPlayer, "supervisor");
         assertEquals(actualResult.getStatusCode(), 200, "Actual status code is not as expected");
 
-        CreatePlayer actualPlayer = actualResult.as(CreatePlayer.class);
+        CreatePlayerRequestDto actualPlayer = actualResult.as(CreatePlayerRequestDto.class);
         assertTrue(actualPlayer.getId() > 0, "Incorrect userId value");
 
         LOGGER.info("Actual test player has been created: {}", actualPlayer);

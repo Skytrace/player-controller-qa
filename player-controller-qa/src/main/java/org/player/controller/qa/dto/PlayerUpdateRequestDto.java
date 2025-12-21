@@ -2,29 +2,16 @@ package org.player.controller.qa.dto;
 
 import java.util.Objects;
 
-public class CreatePlayer {
-    private Long id;
-    private String gender;
+public class PlayerUpdateRequestDto {
+
     private Integer age;
+    private String gender;
     private String login;
     private String password;
     private String role;
     private String screenName;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
+    public PlayerUpdateRequestDto() {
     }
 
     public Integer getAge() {
@@ -33,6 +20,14 @@ public class CreatePlayer {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getLogin() {
@@ -68,34 +63,27 @@ public class CreatePlayer {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CreatePlayer userItem = (CreatePlayer) o;
-        return Objects.equals(id, userItem.id) &&
-                Objects.equals(gender, userItem.gender) &&
-                Objects.equals(age, userItem.age) &&
-                Objects.equals(login, userItem.login) &&
-                Objects.equals(password, userItem.password) &&
-                Objects.equals(role, userItem.role) &&
-                Objects.equals(screenName, userItem.screenName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, gender, age, login, password, role, screenName);
-    }
-
-    @Override
     public String toString() {
-        return "UserItem{" +
-                "id=" + id +
+        return "PlayerUpdateRequestDto{" +
+                "age=" + age +
                 ", gender='" + gender + '\'' +
-                ", age=" + age +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
                 ", screenName='" + screenName + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PlayerUpdateRequestDto that = (PlayerUpdateRequestDto) o;
+        return Objects.equals(age, that.age) && Objects.equals(gender, that.gender) && Objects.equals(login, that.login) && Objects.equals(password, that.password) && Objects.equals(role, that.role) && Objects.equals(screenName, that.screenName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(age, gender, login, password, role, screenName);
     }
 }

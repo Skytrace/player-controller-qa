@@ -2,7 +2,7 @@ package org.player.controller.qa;
 
 import io.restassured.response.Response;
 import org.player.controller.qa.base.BaseTest;
-import org.player.controller.qa.dto.CreatePlayer;
+import org.player.controller.qa.dto.CreatePlayerRequestDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
@@ -22,12 +22,12 @@ public class VerifyCreatePlayerTest extends BaseTest {
 
     @Test(groups = "createPlayer")
     public void shouldCreatePlayerValidAdminRole() {
-        CreatePlayer expected = validPlayer("admin");
+        CreatePlayerRequestDto expected = validPlayer("admin");
         Response response = httpClient.createPlayer(expected, "supervisor");
 
         assertEquals(response.getStatusCode(), 200, "Status code mismatch");
 
-        CreatePlayer actual = response.as(CreatePlayer.class);
+        CreatePlayerRequestDto actual = response.as(CreatePlayerRequestDto.class);
         createdPlayerUserId = actual.getId();
 
         assertTrue(createdPlayerUserId != null && createdPlayerUserId > 0, "Player id is invalid");
@@ -43,12 +43,12 @@ public class VerifyCreatePlayerTest extends BaseTest {
 
     @Test(groups = "createPlayer")
     public void shouldCreatePlayerValidUserRole() {
-        CreatePlayer expected = validPlayer("user");
+        CreatePlayerRequestDto expected = validPlayer("user");
         Response response = httpClient.createPlayer(expected, "supervisor");
 
         assertEquals(response.getStatusCode(), 200);
 
-        CreatePlayer actual = response.as(CreatePlayer.class);
+        CreatePlayerRequestDto actual = response.as(CreatePlayerRequestDto.class);
         createdPlayerUserId = actual.getId();
 
         assertTrue(createdPlayerUserId != null && createdPlayerUserId > 0);
@@ -60,7 +60,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
 
     @Test(groups = "createPlayer")
     public void shouldFailCreateWhenAgeIsLowest() {
-        CreatePlayer expectedPlayer = validPlayer("user");
+        CreatePlayerRequestDto expectedPlayer = validPlayer("user");
         expectedPlayer.setAge(16);
 
         Response actualResponse = httpClient.createPlayer(expectedPlayer, "admin");
@@ -72,7 +72,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
 
     @Test(groups = "createPlayer")
     public void shouldFailCreateWhenAgeIsHighest() {
-        CreatePlayer expectedPlayer = validPlayer("user");
+        CreatePlayerRequestDto expectedPlayer = validPlayer("user");
         expectedPlayer.setAge(60);
 
         Response actualResponse = httpClient.createPlayer(expectedPlayer, "admin");
@@ -88,7 +88,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
 
     @Test(groups = "createPlayer")
     public void shouldFailCreateWhenGenderIsInvalid() {
-        CreatePlayer expectedPlayer = validPlayer("user");
+        CreatePlayerRequestDto expectedPlayer = validPlayer("user");
         expectedPlayer.setGender("unknown");
 
         Response actualResponse = httpClient.createPlayer(expectedPlayer, "admin");
@@ -100,7 +100,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
 
     @Test(groups = "createPlayer")
     public void shouldFailCreateWhenGenderIsUppercase() {
-        CreatePlayer expectedPlayer = validPlayer("user");
+        CreatePlayerRequestDto expectedPlayer = validPlayer("user");
         expectedPlayer.setGender("MALE");
 
         Response actualResponse = httpClient.createPlayer(expectedPlayer, "admin");
@@ -116,7 +116,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
 
     @Test(groups = "createPlayer")
     public void shouldFailCreateWhenRoleIsInvalid() {
-        CreatePlayer expectedPlayer = validPlayer("randomRole");
+        CreatePlayerRequestDto expectedPlayer = validPlayer("randomRole");
 
         Response actualResponse = httpClient.createPlayer(expectedPlayer, "admin");
         captureUnexpectedCreation(actualResponse);
@@ -131,7 +131,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
 
     @Test(groups = "createPlayer")
     public void shouldFailCreateWhenEditorHasNoPermission() {
-        CreatePlayer expectedPlayer = validPlayer("user");
+        CreatePlayerRequestDto expectedPlayer = validPlayer("user");
 
         Response actualResponse = httpClient.createPlayer(expectedPlayer, "user");
         captureUnexpectedCreation(actualResponse);
@@ -146,7 +146,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
 
     @Test(groups = "createPlayer")
     public void shouldFailCreateWhenPasswordTooShort() {
-        CreatePlayer expectedPlayer = validPlayer("user");
+        CreatePlayerRequestDto expectedPlayer = validPlayer("user");
         expectedPlayer.setPassword("123");
 
         Response actualResponse = httpClient.createPlayer(expectedPlayer, "admin");
@@ -158,7 +158,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
 
     @Test(groups = "createPlayer")
     public void shouldFailCreateWhenPasswordHasNoDigits() {
-        CreatePlayer expectedPlayer = validPlayer("user");
+        CreatePlayerRequestDto expectedPlayer = validPlayer("user");
         expectedPlayer.setPassword("abcdefg"); // 7 chars, but no digits
 
         Response actualResponse = httpClient.createPlayer(expectedPlayer, "supervisor");
@@ -170,7 +170,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
 
     @Test(groups = "createPlayer")
     public void shouldFailCreateWhenPasswordHasNoLetters() {
-        CreatePlayer expectedPlayer = validPlayer("user");
+        CreatePlayerRequestDto expectedPlayer = validPlayer("user");
         expectedPlayer.setPassword("1234567"); // 7 chars, but no letters
 
         Response actualResponse = httpClient.createPlayer(expectedPlayer, "supervisor");
@@ -182,7 +182,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
 
     @Test(groups = "createPlayer")
     public void shouldFailCreateWhenPasswordHasNonLatin() {
-        CreatePlayer expectedPlayer = validPlayer("user");
+        CreatePlayerRequestDto expectedPlayer = validPlayer("user");
         expectedPlayer.setPassword("пароль123");
 
         Response actualResponse = httpClient.createPlayer(expectedPlayer, "supervisor");
@@ -201,18 +201,18 @@ public class VerifyCreatePlayerTest extends BaseTest {
         String dupLogin = "dup_login_" + System.currentTimeMillis();
 
         // create first user
-        CreatePlayer first = validPlayer("user");
+        CreatePlayerRequestDto first = validPlayer("user");
         first.setLogin(dupLogin);
 
         Response creatFirstUserActualResponse = httpClient.createPlayer(first, "supervisor");
         assertEquals(creatFirstUserActualResponse.getStatusCode(), 200, "Precondition user wasn't created");
 
-        Long firstId = creatFirstUserActualResponse.as(CreatePlayer.class).getId();
+        Long firstId = creatFirstUserActualResponse.as(CreatePlayerRequestDto.class).getId();
         // if anything goes wrong later, we still should cleanup this one:
         createdPlayerUserId = firstId;
 
         // create second user with assertionme login
-        CreatePlayer second = validPlayer("user");
+        CreatePlayerRequestDto second = validPlayer("user");
         second.setLogin(dupLogin);
 
         Response creatSecondUserActualResponse = httpClient.createPlayer(second, "admin");
@@ -235,17 +235,17 @@ public class VerifyCreatePlayerTest extends BaseTest {
         String dupScreen = "dup_screen_" + System.currentTimeMillis();
 
         // create first user
-        CreatePlayer first = validPlayer("user");
+        CreatePlayerRequestDto first = validPlayer("user");
         first.setScreenName(dupScreen);
 
         Response creatFirstUserActualResponse = httpClient.createPlayer(first, "supervisor");
         assertEquals(creatFirstUserActualResponse.getStatusCode(), 200, "Precondition user wasn't created");
 
-        Long firstPlayerId = creatFirstUserActualResponse.as(CreatePlayer.class).getId();
+        Long firstPlayerId = creatFirstUserActualResponse.as(CreatePlayerRequestDto.class).getId();
         createdPlayerUserId = firstPlayerId;
 
         // create second user with assertionme screenName
-        CreatePlayer second = validPlayer("user");
+        CreatePlayerRequestDto second = validPlayer("user");
         second.setScreenName(dupScreen);
 
         Response secondPlayerId = httpClient.createPlayer(second, "admin");
@@ -277,8 +277,8 @@ public class VerifyCreatePlayerTest extends BaseTest {
        HELPERS
        ========================= */
 
-    private CreatePlayer validPlayer(String role) {
-        CreatePlayer player = new CreatePlayer();
+    private CreatePlayerRequestDto validPlayer(String role) {
+        CreatePlayerRequestDto player = new CreatePlayerRequestDto();
         player.setAge(25);
         player.setGender("male");
         player.setLogin("testLoginUserVcpt");
@@ -294,7 +294,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
      */
     private void captureUnexpectedCreation(Response response) {
         if (response != null && response.getStatusCode() == 200) {
-            CreatePlayer created = response.as(CreatePlayer.class);
+            CreatePlayerRequestDto created = response.as(CreatePlayerRequestDto.class);
             createdPlayerUserId = created.getId();
             LOGGER.error("Player created unexpectedly. id={}", createdPlayerUserId);
         }
