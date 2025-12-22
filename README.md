@@ -35,6 +35,25 @@ To generate Allure report:
 # Bugs Found During Testing
 
 ----
+
+**[ISSUE] Player creation is implemented using GET method (critical design issue)**
+
+`GET /player/create/{editor}?age=...&gender=...&login=...&password=...`
+
+Decription:
+Player creation is implemented using HTTP GET method with query parameters, instead of a request body.
+
+**Expected:**
+* Resource creation must be performed using POST;
+* Request data must be passed in JSON request body;
+* Sensitive fields (e.g. password) must never be sent via URL.
+
+**Actual:**
+* GET request creates a player;
+* All player data is passed via query parameters;
+* Password is transferred as part of the URL.
+
+----
 **[ISSUE] Player creation does not return created fields**
 
 Decription:
