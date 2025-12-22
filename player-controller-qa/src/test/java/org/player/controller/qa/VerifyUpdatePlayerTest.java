@@ -24,7 +24,7 @@ public class VerifyUpdatePlayerTest extends BaseTest {
     public void updatePlayerAgeOnlyOneField() {
         // create test player
         CreatePlayerRequestDto expectedTestPlayer = createValidPlayerHelper("user");
-        Response createPlayerResponse = httpClient.createPlayer(expectedTestPlayer, "supervisor");
+        Response createPlayerResponse = getHttpClient().createPlayer(expectedTestPlayer, "supervisor");
 
         assertEquals(createPlayerResponse.getStatusCode(), 200, "Status code mismatch");
 
@@ -35,7 +35,7 @@ public class VerifyUpdatePlayerTest extends BaseTest {
         Map<String, Object> playerUpdateRequest = new HashMap<>();
         playerUpdateRequest.put("age", Long.valueOf(18L));
         // request update player
-        Response actualUpdatePlayerResponse = httpClient.updatePlayer(playerUpdateRequest, "supervisor", testPlayerId);
+        Response actualUpdatePlayerResponse = getHttpClient().updatePlayer(playerUpdateRequest, "supervisor", testPlayerId);
         assertEquals(actualUpdatePlayerResponse.getStatusCode(), 200);
 
         PlayerUpdateResponseDto actualUpdatedPlayer = actualUpdatePlayerResponse.as(PlayerUpdateResponseDto.class);
@@ -58,7 +58,7 @@ public class VerifyUpdatePlayerTest extends BaseTest {
     public void shouldUpdateMultipleFields() {
         // create test player
         CreatePlayerRequestDto expectedTestPlayer = createValidPlayerHelper("user");
-        Response expectedPlayerCreationResponse = httpClient.createPlayer(expectedTestPlayer, "supervisor");
+        Response expectedPlayerCreationResponse = getHttpClient().createPlayer(expectedTestPlayer, "supervisor");
 
         assertEquals(expectedPlayerCreationResponse.getStatusCode(), 200, "Status code mismatch");
 
@@ -73,7 +73,7 @@ public class VerifyUpdatePlayerTest extends BaseTest {
         playerUpdateRequest.put("screenName", "screen_vcpt_updated");
 
         // request update player
-        Response actualResponse = httpClient.updatePlayer(playerUpdateRequest, "supervisor", testPlayerId);
+        Response actualResponse = getHttpClient().updatePlayer(playerUpdateRequest, "supervisor", testPlayerId);
         assertEquals(actualResponse.getStatusCode(), 200);
 
         PlayerUpdateResponseDto actualUpdatedPlayer = actualResponse.as(PlayerUpdateResponseDto.class);
@@ -90,7 +90,7 @@ public class VerifyUpdatePlayerTest extends BaseTest {
     public void failUpdateWhenEditorHasNoPermission() {
         // create test player
         CreatePlayerRequestDto expectedTestPlayer = createValidPlayerHelper("user");
-        Response createPlayerResponse = httpClient.createPlayer(expectedTestPlayer, "supervisor");
+        Response createPlayerResponse = getHttpClient().createPlayer(expectedTestPlayer, "supervisor");
 
         assertEquals(createPlayerResponse.getStatusCode(), 200, "Status code mismatch");
 
@@ -105,7 +105,7 @@ public class VerifyUpdatePlayerTest extends BaseTest {
         playerUpdateRequest.put("screenName", "screen_vcpt_updated");
 
         // request update player
-        Response actualResponse = httpClient.updatePlayer(playerUpdateRequest, "admin", testPlayerId);
+        Response actualResponse = getHttpClient().updatePlayer(playerUpdateRequest, "admin", testPlayerId);
         assertEquals(actualResponse.getStatusCode(), 403, "Actual status code is not as expected");
     }
 
@@ -113,7 +113,7 @@ public class VerifyUpdatePlayerTest extends BaseTest {
     public void failUpdateWhenDataIsInvalid() {
         // create test player
         CreatePlayerRequestDto expectedTestPlayer = createValidPlayerHelper("user");
-        Response createPlayerResponse = httpClient.createPlayer(expectedTestPlayer, "supervisor");
+        Response createPlayerResponse = getHttpClient().createPlayer(expectedTestPlayer, "supervisor");
 
         assertEquals(createPlayerResponse.getStatusCode(), 200, "Status code mismatch");
 
@@ -128,7 +128,7 @@ public class VerifyUpdatePlayerTest extends BaseTest {
         playerUpdateRequest.put("screenName", "");
 
         // request update player
-        Response actualResponse = httpClient.updatePlayer(playerUpdateRequest, "supervisor", testPlayerId);
+        Response actualResponse = getHttpClient().updatePlayer(playerUpdateRequest, "supervisor", testPlayerId);
         assertEquals(actualResponse.getStatusCode(), 400, "Actual status code is not as expected");
     }
 
@@ -136,7 +136,7 @@ public class VerifyUpdatePlayerTest extends BaseTest {
     public void cleanup() {
         if (testPlayerId != null) {
             LOGGER.info("Cleanup: deleting player id={}", testPlayerId);
-            httpClient.deletePlayer(testPlayerId, "supervisor");
+            getHttpClient().deletePlayer(testPlayerId, "supervisor");
             testPlayerId = null;
         }
     }

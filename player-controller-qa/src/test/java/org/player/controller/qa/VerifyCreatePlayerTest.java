@@ -19,7 +19,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
     @Test(groups = "createPlayer")
     public void shouldCreatePlayerWithAdminRole() {
         CreatePlayerRequestDto expectedPlayer = createValidPlayerHelper("admin");
-        Response createPlayerResponse = httpClient.createPlayer(expectedPlayer, "supervisor");
+        Response createPlayerResponse = getHttpClient().createPlayer(expectedPlayer, "supervisor");
 
         assertEquals(createPlayerResponse.getStatusCode(), 200, "Actual status code is not as expected");
 
@@ -40,7 +40,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
     @Test(groups = "createPlayer")
     public void shouldCreatePlayerValidUserRole() {
         CreatePlayerRequestDto expectedPlayer = createValidPlayerHelper("user");
-        Response createPlayerResponse = httpClient.createPlayer(expectedPlayer, "supervisor");
+        Response createPlayerResponse = getHttpClient().createPlayer(expectedPlayer, "supervisor");
 
         assertEquals(createPlayerResponse.getStatusCode(), 200, "Actual status code is not as expected");
 
@@ -63,7 +63,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
         CreatePlayerRequestDto expectedPlayer = createValidPlayerHelper("user");
         expectedPlayer.setAge(16);
 
-        Response actualResponse = httpClient.createPlayer(expectedPlayer, "admin");
+        Response actualResponse = getHttpClient().createPlayer(expectedPlayer, "admin");
         captureUnexpectedCreation(actualResponse);
 
         assertTrue(actualResponse.getStatusCode() == 400 || actualResponse.getStatusCode() == 403,
@@ -75,7 +75,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
         CreatePlayerRequestDto expectedPlayer = createValidPlayerHelper("user");
         expectedPlayer.setAge(60);
 
-        Response actualResponse = httpClient.createPlayer(expectedPlayer, "admin");
+        Response actualResponse = getHttpClient().createPlayer(expectedPlayer, "admin");
         captureUnexpectedCreation(actualResponse);
 
         assertTrue(actualResponse.getStatusCode() == 400 || actualResponse.getStatusCode() == 403,
@@ -87,7 +87,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
         CreatePlayerRequestDto expectedPlayer = createValidPlayerHelper("user");
         expectedPlayer.setGender("unknown");
 
-        Response actualResponse = httpClient.createPlayer(expectedPlayer, "admin");
+        Response actualResponse = getHttpClient().createPlayer(expectedPlayer, "admin");
         captureUnexpectedCreation(actualResponse);
 
         assertTrue(actualResponse.getStatusCode() == 400 || actualResponse.getStatusCode() == 403,
@@ -99,7 +99,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
         CreatePlayerRequestDto expectedPlayer = createValidPlayerHelper("user");
         expectedPlayer.setGender("MALE");
 
-        Response actualResponse = httpClient.createPlayer(expectedPlayer, "admin");
+        Response actualResponse = getHttpClient().createPlayer(expectedPlayer, "admin");
         captureUnexpectedCreation(actualResponse);
 
         assertTrue(actualResponse.getStatusCode() == 400 || actualResponse.getStatusCode() == 403,
@@ -110,7 +110,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
     public void shouldFailCreateWhenRoleIsInvalid() {
         CreatePlayerRequestDto expectedPlayer = createValidPlayerHelper("randomRole");
 
-        Response actualResponse = httpClient.createPlayer(expectedPlayer, "admin");
+        Response actualResponse = getHttpClient().createPlayer(expectedPlayer, "admin");
         captureUnexpectedCreation(actualResponse);
 
         assertTrue(actualResponse.getStatusCode() == 400 || actualResponse.getStatusCode() == 403,
@@ -121,7 +121,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
     public void shouldFailCreateWhenEditorHasNoPermission() {
         CreatePlayerRequestDto expectedPlayer = createValidPlayerHelper("user");
 
-        Response actualResponse = httpClient.createPlayer(expectedPlayer, "user");
+        Response actualResponse = getHttpClient().createPlayer(expectedPlayer, "user");
         captureUnexpectedCreation(actualResponse);
 
         assertEquals(actualResponse.getStatusCode(), 403,
@@ -133,7 +133,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
         CreatePlayerRequestDto expectedPlayer = createValidPlayerHelper("user");
         expectedPlayer.setPassword("123");
 
-        Response actualResponse = httpClient.createPlayer(expectedPlayer, "admin");
+        Response actualResponse = getHttpClient().createPlayer(expectedPlayer, "admin");
         captureUnexpectedCreation(actualResponse);
 
         assertTrue(actualResponse.getStatusCode() == 400 || actualResponse.getStatusCode() == 403,
@@ -145,7 +145,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
         CreatePlayerRequestDto expectedPlayer = createValidPlayerHelper("user");
         expectedPlayer.setPassword("abcdefg"); // 7 chars, but no digits
 
-        Response actualResponse = httpClient.createPlayer(expectedPlayer, "supervisor");
+        Response actualResponse = getHttpClient().createPlayer(expectedPlayer, "supervisor");
         captureUnexpectedCreation(actualResponse);
 
         assertTrue(actualResponse.getStatusCode() == 400 || actualResponse.getStatusCode() == 403,
@@ -157,7 +157,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
         CreatePlayerRequestDto expectedPlayer = createValidPlayerHelper("user");
         expectedPlayer.setPassword("1234567"); // 7 chars, but no letters
 
-        Response actualResponse = httpClient.createPlayer(expectedPlayer, "supervisor");
+        Response actualResponse = getHttpClient().createPlayer(expectedPlayer, "supervisor");
         captureUnexpectedCreation(actualResponse);
 
         assertTrue(actualResponse.getStatusCode() == 400 || actualResponse.getStatusCode() == 403,
@@ -169,7 +169,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
         CreatePlayerRequestDto expectedPlayer = createValidPlayerHelper("user");
         expectedPlayer.setPassword("пароль123");
 
-        Response actualResponse = httpClient.createPlayer(expectedPlayer, "supervisor");
+        Response actualResponse = getHttpClient().createPlayer(expectedPlayer, "supervisor");
         captureUnexpectedCreation(actualResponse);
 
         assertTrue(actualResponse.getStatusCode() == 400 || actualResponse.getStatusCode() == 403,
@@ -180,7 +180,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
     public void shouldFailCreateWhenLoginIsNotUnique() {
         CreatePlayerRequestDto firstPlayer = createValidPlayerHelper("user");
 
-        Response creatFirstUserActualResponse = httpClient.createPlayer(firstPlayer, "supervisor");
+        Response creatFirstUserActualResponse = getHttpClient().createPlayer(firstPlayer, "supervisor");
         assertEquals(creatFirstUserActualResponse.getStatusCode(), 200, "Precondition user wasn't created");
 
         Long firstId = creatFirstUserActualResponse.as(CreatePlayerRequestDto.class).getId();
@@ -188,7 +188,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
 
         // create second user with assertionme login
         CreatePlayerRequestDto secondPlayer = createValidPlayerHelper("user");
-        Response creatSecondUserActualResponse = httpClient.createPlayer(secondPlayer, "admin");
+        Response creatSecondUserActualResponse = getHttpClient().createPlayer(secondPlayer, "admin");
 
         // BUG: if API still created it
         captureUnexpectedCreation(creatSecondUserActualResponse);
@@ -203,7 +203,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
     public void shouldFailCreateWhenScreenNameIsNotUnique() {
         // create first user
         CreatePlayerRequestDto first = createValidPlayerHelper("user");
-        Response creatFirstUserActualResponse = httpClient.createPlayer(first, "supervisor");
+        Response creatFirstUserActualResponse = getHttpClient().createPlayer(first, "supervisor");
         assertEquals(creatFirstUserActualResponse.getStatusCode(), 200, "Precondition user wasn't created");
 
         Long firstPlayerId = creatFirstUserActualResponse.as(CreatePlayerRequestDto.class).getId();
@@ -211,7 +211,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
 
         // create second user with assertionme screenName
         CreatePlayerRequestDto second = createValidPlayerHelper("user");
-        Response secondPlayerId = httpClient.createPlayer(second, "admin");
+        Response secondPlayerId = getHttpClient().createPlayer(second, "admin");
 
         // BUG: if API still created it
         captureUnexpectedCreation(secondPlayerId);
@@ -227,7 +227,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
     public void deleteCreatedPlayer() {
         if (createdPlayerId != null) {
             LOGGER.info("Cleanup: deleting test player id = {}", createdPlayerId);
-            Response deleteResponse = httpClient.deletePlayer(createdPlayerId, "supervisor");
+            Response deleteResponse = getHttpClient().deletePlayer(createdPlayerId, "supervisor");
             LOGGER.info("Cleanup delete statusCode = {}", deleteResponse.getStatusCode());
         }
     }

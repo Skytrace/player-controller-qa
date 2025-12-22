@@ -21,7 +21,7 @@ public class VerifyGetAllPlayerTest extends BaseTest {
 
     @Test
     public void userDatabaseShouldNotBeEmpty() {
-        Response actualResult = httpClient.getPlayers();
+        Response actualResult = getHttpClient().getPlayers();
 
         assertEquals(actualResult.getStatusCode(), 200, "Expected status code 200");
 
@@ -34,7 +34,7 @@ public class VerifyGetAllPlayerTest extends BaseTest {
 
     @Test
     public void eachPlayerMustHaveRequiredFields() {
-        Response actualResponse = httpClient.getPlayers();
+        Response actualResponse = getHttpClient().getPlayers();
 
         assertEquals(actualResponse.getStatusCode(), 200, "Expected status code 200");
 
@@ -55,7 +55,7 @@ public class VerifyGetAllPlayerTest extends BaseTest {
 
     @Test
     public void eachPlayerMustHaveUniqueId() {
-        Response response = httpClient.getPlayers();
+        Response response = getHttpClient().getPlayers();
         assertEquals(response.getStatusCode(), 200, "Expected status code 200");
 
         PlayersResponseDto responseData = response.as(PlayersResponseDto.class);

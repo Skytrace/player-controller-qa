@@ -23,14 +23,14 @@ public class VerifyDeletePlayerTest extends BaseTest {
         CreatePlayerRequestDto expectedPlayer = createValidPlayerHelper();
         expectedPlayer.setLogin("testLoginUserDpById");
 
-        Response actualResult = httpClient.createPlayer(expectedPlayer, "supervisor");
+        Response actualResult = getHttpClient().createPlayer(expectedPlayer, "supervisor");
         assertEquals(actualResult.getStatusCode(), 200, "Actual status code is not as expected");
 
         CreatePlayerRequestDto actualPlayer = actualResult.as(CreatePlayerRequestDto.class);
         assertTrue(actualPlayer.getId() > 0, "Incorrect userId value");
 
         LOGGER.info("Actual test player has been created: {}", actualPlayer);
-        int actualStatusCode = httpClient.deletePlayer(actualPlayer.getId(), "supervisor").statusCode();
+        int actualStatusCode = getHttpClient().deletePlayer(actualPlayer.getId(), "supervisor").statusCode();
 
         Assert.assertEquals(actualStatusCode, 204, "Delete User: Actual status code is not as expected");
     }
@@ -40,7 +40,7 @@ public class VerifyDeletePlayerTest extends BaseTest {
         CreatePlayerRequestDto expectedPlayer = createValidPlayerHelper();
         expectedPlayer.setLogin("testLoginUserDpByIdS");
 
-        Response actualResult = httpClient.createPlayer(expectedPlayer, "supervisor");
+        Response actualResult = getHttpClient().createPlayer(expectedPlayer, "supervisor");
         assertEquals(actualResult.getStatusCode(), 200, "Actual status code is not as expected");
 
         CreatePlayerRequestDto actualPlayer = actualResult.as(CreatePlayerRequestDto.class);
@@ -48,7 +48,7 @@ public class VerifyDeletePlayerTest extends BaseTest {
         LOGGER.info("Actual test player has been created: {}", actualPlayer);
 
         // here passing the player id as a string
-        httpClient.deletePlayer(String.valueOf(actualPlayer.getId()), "supervisor").then().statusCode(400);
+        getHttpClient().deletePlayer(String.valueOf(actualPlayer.getId()), "supervisor").then().statusCode(400);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class VerifyDeletePlayerTest extends BaseTest {
         CreatePlayerRequestDto expectedPlayer = createValidPlayerHelper();
         expectedPlayer.setLogin("testLoginUserDnepById");
 
-        Response actualResult = httpClient.createPlayer(expectedPlayer, "supervisor");
+        Response actualResult = getHttpClient().createPlayer(expectedPlayer, "supervisor");
         assertEquals(actualResult.getStatusCode(), 200, "Actual status code is not as expected");
 
         CreatePlayerRequestDto actualPlayer = actualResult.as(CreatePlayerRequestDto.class);
@@ -64,9 +64,9 @@ public class VerifyDeletePlayerTest extends BaseTest {
 
         LOGGER.info("Actual test player has been created: {}", actualPlayer);
 
-        httpClient.deletePlayer(actualPlayer.getId(), "supervisor").then().statusCode(204);
+        getHttpClient().deletePlayer(actualPlayer.getId(), "supervisor").then().statusCode(204);
 
-        int actualStatusCode = httpClient.deletePlayer(actualPlayer.getId(), "supervisor").statusCode();
+        int actualStatusCode = getHttpClient().deletePlayer(actualPlayer.getId(), "supervisor").statusCode();
         Assert.assertEquals(actualStatusCode, 404, "Actual status code for deleting non existed user " +
                 "is not as expected");
 
@@ -75,7 +75,7 @@ public class VerifyDeletePlayerTest extends BaseTest {
     @Test(dataProvider = "getValidationDataForDeletePlayerTest")
     public void deletePlayerValidation(Object id) {
         int expectedStatusCode = 400; // bad request
-        int actualStatusCode = httpClient.deletePlayer(id, "supervisor").statusCode();
+        int actualStatusCode = getHttpClient().deletePlayer(id, "supervisor").statusCode();
 
         Assert.assertEquals(actualStatusCode, expectedStatusCode, "Actual status code is not as expected");
     }
@@ -84,7 +84,7 @@ public class VerifyDeletePlayerTest extends BaseTest {
     public void cleanPlayerFromDeletePlayerByIdAsStringTest() {
         LOGGER.info("Time to delete test player with id {}", testPlayerId);
         if (testPlayerId != null) {
-            httpClient.deletePlayer(testPlayerId, "supervisor").then().statusCode(204);
+            getHttpClient().deletePlayer(testPlayerId, "supervisor").then().statusCode(204);
             LOGGER.info("Test User with id - {}, successfully deleted", testPlayerId);
         }
     }
