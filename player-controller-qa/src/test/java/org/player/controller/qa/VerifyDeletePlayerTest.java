@@ -3,6 +3,7 @@ package org.player.controller.qa;
 import io.restassured.response.Response;
 import org.player.controller.qa.base.BaseTest;
 import org.player.controller.qa.dto.CreatePlayerRequestDto;
+import org.player.controller.qa.dto.CreatePlayerResponseDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -26,7 +27,7 @@ public class VerifyDeletePlayerTest extends BaseTest {
         Response actualResult = getHttpClient().createPlayer(expectedPlayer, "supervisor");
         assertEquals(actualResult.getStatusCode(), 200, "Actual status code is not as expected");
 
-        CreatePlayerRequestDto actualPlayer = actualResult.as(CreatePlayerRequestDto.class);
+        CreatePlayerResponseDto actualPlayer = actualResult.as(CreatePlayerResponseDto.class);
         assertTrue(actualPlayer.getId() > 0, "Incorrect userId value");
 
         LOGGER.info("Actual test player has been created: {}", actualPlayer);
@@ -43,7 +44,7 @@ public class VerifyDeletePlayerTest extends BaseTest {
         Response actualResult = getHttpClient().createPlayer(expectedPlayer, "supervisor");
         assertEquals(actualResult.getStatusCode(), 200, "Actual status code is not as expected");
 
-        CreatePlayerRequestDto actualPlayer = actualResult.as(CreatePlayerRequestDto.class);
+        CreatePlayerResponseDto actualPlayer = actualResult.as(CreatePlayerResponseDto.class);
         testPlayerId = actualPlayer.getId();
         LOGGER.info("Actual test player has been created: {}", actualPlayer);
 
@@ -59,7 +60,7 @@ public class VerifyDeletePlayerTest extends BaseTest {
         Response actualResult = getHttpClient().createPlayer(expectedPlayer, "supervisor");
         assertEquals(actualResult.getStatusCode(), 200, "Actual status code is not as expected");
 
-        CreatePlayerRequestDto actualPlayer = actualResult.as(CreatePlayerRequestDto.class);
+        CreatePlayerResponseDto actualPlayer = actualResult.as(CreatePlayerResponseDto.class);
         assertTrue(actualPlayer.getId() > 0, "Incorrect userId value");
 
         LOGGER.info("Actual test player has been created: {}", actualPlayer);

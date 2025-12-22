@@ -3,6 +3,7 @@ package org.player.controller.qa;
 import io.restassured.response.Response;
 import org.player.controller.qa.base.BaseTest;
 import org.player.controller.qa.dto.CreatePlayerRequestDto;
+import org.player.controller.qa.dto.CreatePlayerResponseDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
@@ -23,7 +24,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
 
         assertEquals(createPlayerResponse.getStatusCode(), 200, "Actual status code is not as expected");
 
-        CreatePlayerRequestDto actualPlayer = createPlayerResponse.as(CreatePlayerRequestDto.class);
+        CreatePlayerResponseDto actualPlayer = createPlayerResponse.as(CreatePlayerResponseDto.class);
         createdPlayerId = actualPlayer.getId();
 
         assertTrue(createdPlayerId != null && createdPlayerId > 0, "Player id is invalid");
@@ -44,7 +45,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
 
         assertEquals(createPlayerResponse.getStatusCode(), 200, "Actual status code is not as expected");
 
-        CreatePlayerRequestDto actualPlayer = createPlayerResponse.as(CreatePlayerRequestDto.class);
+        CreatePlayerResponseDto actualPlayer = createPlayerResponse.as(CreatePlayerResponseDto.class);
         createdPlayerId = actualPlayer.getId();
 
         assertTrue(createdPlayerId != null && createdPlayerId > 0);
@@ -183,7 +184,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
         Response creatFirstUserActualResponse = getHttpClient().createPlayer(firstPlayer, "supervisor");
         assertEquals(creatFirstUserActualResponse.getStatusCode(), 200, "Precondition user wasn't created");
 
-        Long firstId = creatFirstUserActualResponse.as(CreatePlayerRequestDto.class).getId();
+        Long firstId = creatFirstUserActualResponse.as(CreatePlayerResponseDto.class).getId();
         createdPlayerId = firstId;
 
         // create second user with assertionme login
@@ -206,7 +207,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
         Response creatFirstUserActualResponse = getHttpClient().createPlayer(first, "supervisor");
         assertEquals(creatFirstUserActualResponse.getStatusCode(), 200, "Precondition user wasn't created");
 
-        Long firstPlayerId = creatFirstUserActualResponse.as(CreatePlayerRequestDto.class).getId();
+        Long firstPlayerId = creatFirstUserActualResponse.as(CreatePlayerResponseDto.class).getId();
         createdPlayerId = firstPlayerId;
 
         // create second user with assertionme screenName
@@ -249,7 +250,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
      */
     private void captureUnexpectedCreation(Response response) {
         if (response != null && response.getStatusCode() == 200) {
-            CreatePlayerRequestDto created = response.as(CreatePlayerRequestDto.class);
+            CreatePlayerResponseDto created = response.as(CreatePlayerResponseDto.class);
             createdPlayerId = created.getId();
             LOGGER.error("Player created unexpectedly. id={}", createdPlayerId);
         }
