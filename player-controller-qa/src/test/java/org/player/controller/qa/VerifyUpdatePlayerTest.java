@@ -18,30 +18,29 @@ import static org.testng.Assert.*;
 
 public class VerifyUpdatePlayerTest extends BaseTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(VerifyUpdatePlayerTest.class);
-    private Long createdPlayerId;
+    private Long testPlayerId;
 
     @Test(groups = "updatePlayer")
     public void updatePlayerAgeOnlyOneField() {
         // create test player
-        CreatePlayerRequestDto expectedTestPlayer = validPlayer("user");
+        CreatePlayerRequestDto expectedTestPlayer = createValidPlayerHelper("user");
         Response response = httpClient.createPlayer(expectedTestPlayer, "supervisor");
 
         assertEquals(response.getStatusCode(), 200, "Status code mismatch");
 
         CreatePlayerResponseDto createdTestPlayer = response.as(CreatePlayerResponseDto.class);
-        createdPlayerId = createdTestPlayer.getId();
+        testPlayerId = createdTestPlayer.getId();
 
         // update player
         Map<String, Object> playerUpdateRequest = new HashMap<>();
         playerUpdateRequest.put("age", Long.valueOf(18L));
         // request update player
-        Response actualResponse = httpClient.updatePlayer(playerUpdateRequest, "supervisor", createdPlayerId);
+        Response actualResponse = httpClient.updatePlayer(playerUpdateRequest, "supervisor", testPlayerId);
         assertEquals(actualResponse.getStatusCode(), 200);
 
         PlayerUpdateResponseDto actualUpdatedPlayer = actualResponse.as(PlayerUpdateResponseDto.class);
 
         SoftAssert assertion = new SoftAssert();
-
         assertion.assertEquals(actualUpdatedPlayer.getAge(), Integer.valueOf(18),
                 "Actual age is not as expected");
         assertion.assertEquals(actualUpdatedPlayer.getGender(), expectedTestPlayer.getGender(),
@@ -52,20 +51,19 @@ public class VerifyUpdatePlayerTest extends BaseTest {
                 "actual screen name is not as expected");
         assertion.assertEquals(actualUpdatedPlayer.getRole(), expectedTestPlayer.getRole(),
                 "actual role is not as expected");
-
         assertion.assertAll();
     }
 
     @Test(groups = "updatePlayer")
     public void shouldUpdateMultipleFields() {
         // create test player
-        CreatePlayerRequestDto expectedTestPlayer = validPlayer("user");
+        CreatePlayerRequestDto expectedTestPlayer = createValidPlayerHelper("user");
         Response response = httpClient.createPlayer(expectedTestPlayer, "supervisor");
 
         assertEquals(response.getStatusCode(), 200, "Status code mismatch");
 
         CreatePlayerResponseDto createdTestPlayer = response.as(CreatePlayerResponseDto.class);
-        createdPlayerId = createdTestPlayer.getId();
+        testPlayerId = createdTestPlayer.getId();
 
         // update player
         Map<String, Object> playerUpdateRequest = new HashMap<>();
@@ -75,31 +73,29 @@ public class VerifyUpdatePlayerTest extends BaseTest {
         playerUpdateRequest.put("screenName", "screen_vcpt_updated");
 
         // request update player
-        Response actualResponse = httpClient.updatePlayer(playerUpdateRequest, "supervisor", createdPlayerId);
+        Response actualResponse = httpClient.updatePlayer(playerUpdateRequest, "supervisor", testPlayerId);
         assertEquals(actualResponse.getStatusCode(), 200);
 
         PlayerUpdateResponseDto actualUpdatedPlayer = actualResponse.as(PlayerUpdateResponseDto.class);
 
         SoftAssert assertion = new SoftAssert();
-
         assertion.assertEquals(actualUpdatedPlayer.getAge(), Integer.valueOf(18),"Actual age is not as expected");
         assertion.assertEquals(actualUpdatedPlayer.getGender(), playerUpdateRequest.get("gender"),"Actual gender is not as expected");
         assertion.assertEquals(actualUpdatedPlayer.getLogin(), playerUpdateRequest.get("login"),"actual login is not as expected");
         assertion.assertEquals(actualUpdatedPlayer.getScreenName(), playerUpdateRequest.get("screenName"),"actual screen name is not as expected");
-
         assertion.assertAll();
     }
 
     @Test(groups = "updatePlayer")
     public void failUpdateWhenEditorHasNoPermission() {
         // create test player
-        CreatePlayerRequestDto expectedTestPlayer = validPlayer("user");
+        CreatePlayerRequestDto expectedTestPlayer = createValidPlayerHelper("user");
         Response response = httpClient.createPlayer(expectedTestPlayer, "supervisor");
 
         assertEquals(response.getStatusCode(), 200, "Status code mismatch");
 
         CreatePlayerResponseDto createdTestPlayer = response.as(CreatePlayerResponseDto.class);
-        createdPlayerId = createdTestPlayer.getId();
+        testPlayerId = createdTestPlayer.getId();
 
         // update player
         Map<String, Object> playerUpdateRequest = new HashMap<>();
@@ -109,20 +105,20 @@ public class VerifyUpdatePlayerTest extends BaseTest {
         playerUpdateRequest.put("screenName", "screen_vcpt_updated");
 
         // request update player
-        Response actualResponse = httpClient.updatePlayer(playerUpdateRequest, "admin", createdPlayerId);
+        Response actualResponse = httpClient.updatePlayer(playerUpdateRequest, "admin", testPlayerId);
         assertEquals(actualResponse.getStatusCode(), 403, "Actual status code is not as expected");
     }
 
     @Test(groups = "updatePlayer")
     public void failUpdateWhenDataIsInvalid() {
         // create test player
-        CreatePlayerRequestDto expectedTestPlayer = validPlayer("user");
+        CreatePlayerRequestDto expectedTestPlayer = createValidPlayerHelper("user");
         Response response = httpClient.createPlayer(expectedTestPlayer, "supervisor");
 
         assertEquals(response.getStatusCode(), 200, "Status code mismatch");
 
         CreatePlayerResponseDto createdTestPlayer = response.as(CreatePlayerResponseDto.class);
-        createdPlayerId = createdTestPlayer.getId();
+        testPlayerId = createdTestPlayer.getId();
 
         // update player
         Map<String, Object> playerUpdateRequest = new HashMap<>();
@@ -132,20 +128,20 @@ public class VerifyUpdatePlayerTest extends BaseTest {
         playerUpdateRequest.put("screenName", "");
 
         // request update player
-        Response actualResponse = httpClient.updatePlayer(playerUpdateRequest, "supervisor", createdPlayerId);
+        Response actualResponse = httpClient.updatePlayer(playerUpdateRequest, "supervisor", testPlayerId);
         assertEquals(actualResponse.getStatusCode(), 400, "Actual status code is not as expected");
     }
 
     @AfterMethod(alwaysRun = true)
     public void cleanup() {
-        if (createdPlayerId != null) {
-            LOGGER.info("Cleanup: deleting player id={}", createdPlayerId);
-            httpClient.deletePlayer(createdPlayerId, "supervisor");
-            createdPlayerId = null;
+        if (testPlayerId != null) {
+            LOGGER.info("Cleanup: deleting player id={}", testPlayerId);
+            httpClient.deletePlayer(testPlayerId, "supervisor");
+            testPlayerId = null;
         }
     }
 
-    private CreatePlayerRequestDto validPlayer(String role) {
+    private CreatePlayerRequestDto createValidPlayerHelper(String role) {
         CreatePlayerRequestDto player = new CreatePlayerRequestDto();
         player.setAge(25);
         player.setGender("male");

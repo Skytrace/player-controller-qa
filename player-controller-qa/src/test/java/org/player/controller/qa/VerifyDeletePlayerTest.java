@@ -15,18 +15,12 @@ import static org.testng.Assert.assertTrue;
 
 public class VerifyDeletePlayerTest extends BaseTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(VerifyDeletePlayerTest.class);
-    private Long testPlayerLoginDpByIdS;
+    private Long testPlayerId;
 
     @Test
     public void deletePlayerById() {
-        CreatePlayerRequestDto expectedPlayer = new CreatePlayerRequestDto();
-        expectedPlayer.setAge(25);
-        expectedPlayer.setGender("male");
-        expectedPlayer.setLogin("testLoginUserDp");
-        expectedPlayer.setPassword("test1UserPassword!");
-        expectedPlayer.setRole("admin");
-        expectedPlayer.setScreenName("test_screen_dpById");
-        LOGGER.info("Expected test player prepared: {}", expectedPlayer);
+        CreatePlayerRequestDto expectedPlayer = createValidPlayerHelper();
+        expectedPlayer.setLogin("testLoginUserDpById");
 
         Response actualResult = httpClient.createPlayer(expectedPlayer, "supervisor");
         assertEquals(actualResult.getStatusCode(), 200, "Actual status code is not as expected");
@@ -41,20 +35,14 @@ public class VerifyDeletePlayerTest extends BaseTest {
 
     @Test(groups = "deletePlayerByIdAsString")
     public void deletePlayerByIdAsString() {
-        CreatePlayerRequestDto expectedPlayer = new CreatePlayerRequestDto();
-        expectedPlayer.setAge(25);
-        expectedPlayer.setGender("male");
+        CreatePlayerRequestDto expectedPlayer = createValidPlayerHelper();
         expectedPlayer.setLogin("testLoginUserDpByIdS");
-        expectedPlayer.setPassword("test1UserPassword!");
-        expectedPlayer.setRole("admin");
-        expectedPlayer.setScreenName("test_screen_DpByIdS");
-        LOGGER.info("Expected test player prepared: {}", expectedPlayer);
 
         Response actualResult = httpClient.createPlayer(expectedPlayer, "supervisor");
         assertEquals(actualResult.getStatusCode(), 200, "Actual status code is not as expected");
 
         CreatePlayerRequestDto actualPlayer = actualResult.as(CreatePlayerRequestDto.class);
-        testPlayerLoginDpByIdS = actualPlayer.getId();
+        testPlayerId = actualPlayer.getId();
         LOGGER.info("Actual test player has been created: {}", actualPlayer);
 
         // here passing the player id as a string
@@ -63,23 +51,17 @@ public class VerifyDeletePlayerTest extends BaseTest {
 
     @AfterTest(groups = "deletePlayerByIdAsString")
     public void cleanPlayerFromDeletePlayerByIdAsStringTest() {
-        LOGGER.info("Time to delete test player with id {}", testPlayerLoginDpByIdS);
-        if (testPlayerLoginDpByIdS != null) {
-            httpClient.deletePlayer(testPlayerLoginDpByIdS, "supervisor").then().statusCode(204);
-            LOGGER.info("Test User with id - {}, successfully deleted", testPlayerLoginDpByIdS);
+        LOGGER.info("Time to delete test player with id {}", testPlayerId);
+        if (testPlayerId != null) {
+            httpClient.deletePlayer(testPlayerId, "supervisor").then().statusCode(204);
+            LOGGER.info("Test User with id - {}, successfully deleted", testPlayerId);
         }
     }
 
     @Test
     public void deleteNonExistedPlayerById() {
-        CreatePlayerRequestDto expectedPlayer = new CreatePlayerRequestDto();
-        expectedPlayer.setAge(20);
-        expectedPlayer.setGender("female");
+        CreatePlayerRequestDto expectedPlayer = createValidPlayerHelper();
         expectedPlayer.setLogin("testLoginUserDnepById");
-        expectedPlayer.setPassword("test1UserPassword!");
-        expectedPlayer.setRole("admin");
-        expectedPlayer.setScreenName("test_screen_Dnep");
-        LOGGER.info("Expected test player prepared: {}", expectedPlayer);
 
         Response actualResult = httpClient.createPlayer(expectedPlayer, "supervisor");
         assertEquals(actualResult.getStatusCode(), 200, "Actual status code is not as expected");
@@ -112,6 +94,18 @@ public class VerifyDeletePlayerTest extends BaseTest {
                 { null },          // checking on null
                 { "" }             // checking on empty String
         };
+    }
+
+    private CreatePlayerRequestDto createValidPlayerHelper() {
+        CreatePlayerRequestDto expectedPlayer = new CreatePlayerRequestDto();
+        expectedPlayer.setAge(25);
+        expectedPlayer.setGender("male");
+        expectedPlayer.setLogin("testLoginUserDp");
+        expectedPlayer.setPassword("test1UserPassword!");
+        expectedPlayer.setRole("user");
+        expectedPlayer.setScreenName("test_screen_dpById");
+        LOGGER.info("Expected test player prepared: {}", expectedPlayer);
+        return expectedPlayer;
     }
 
 }

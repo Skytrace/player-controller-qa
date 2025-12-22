@@ -34,16 +34,16 @@ public class VerifyGetAllPlayerTest extends BaseTest {
 
     @Test
     public void eachPlayerMustHaveRequiredFields() {
-        Response response = httpClient.getPlayers();
+        Response actualResponse = httpClient.getPlayers();
 
-        assertEquals(response.getStatusCode(), 200, "Expected status code 200");
+        assertEquals(actualResponse.getStatusCode(), 200, "Expected status code 200");
 
-        PlayersResponseDto responseData = response.as(PlayersResponseDto.class);
-        List<PlayerItemResponseDto> players = responseData.getPlayers();
+        PlayersResponseDto actualPlayersResponse = actualResponse.as(PlayersResponseDto.class);
+        List<PlayerItemResponseDto> actualPlayers = actualPlayersResponse.getPlayers();
 
-        assertTrue(players.size() > 0, "Players list should not be empty");
+        assertTrue(actualPlayers.size() > 0, "Players list should not be empty");
 
-        for (PlayerItemResponseDto player : players) {
+        for (PlayerItemResponseDto player : actualPlayers) {
             assertTrue(player.getId() > 0, "Player id should be positive");
             assertNotNull(player.getScreenName(), "Player screenName should not be null");
             assertFalse(player.getScreenName().isEmpty(), "Player screenName should not be empty");
