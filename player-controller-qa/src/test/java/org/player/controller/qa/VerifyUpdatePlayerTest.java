@@ -24,21 +24,21 @@ public class VerifyUpdatePlayerTest extends BaseTest {
     public void updatePlayerAgeOnlyOneField() {
         // create test player
         CreatePlayerRequestDto expectedTestPlayer = createValidPlayerHelper("user");
-        Response response = httpClient.createPlayer(expectedTestPlayer, "supervisor");
+        Response createPlayerResponse = httpClient.createPlayer(expectedTestPlayer, "supervisor");
 
-        assertEquals(response.getStatusCode(), 200, "Status code mismatch");
+        assertEquals(createPlayerResponse.getStatusCode(), 200, "Status code mismatch");
 
-        CreatePlayerResponseDto createdTestPlayer = response.as(CreatePlayerResponseDto.class);
-        testPlayerId = createdTestPlayer.getId();
+        CreatePlayerResponseDto actualPlayer = createPlayerResponse.as(CreatePlayerResponseDto.class);
+        testPlayerId = actualPlayer.getId();
 
         // update player
         Map<String, Object> playerUpdateRequest = new HashMap<>();
         playerUpdateRequest.put("age", Long.valueOf(18L));
         // request update player
-        Response actualResponse = httpClient.updatePlayer(playerUpdateRequest, "supervisor", testPlayerId);
-        assertEquals(actualResponse.getStatusCode(), 200);
+        Response actualUpdatePlayerResponse = httpClient.updatePlayer(playerUpdateRequest, "supervisor", testPlayerId);
+        assertEquals(actualUpdatePlayerResponse.getStatusCode(), 200);
 
-        PlayerUpdateResponseDto actualUpdatedPlayer = actualResponse.as(PlayerUpdateResponseDto.class);
+        PlayerUpdateResponseDto actualUpdatedPlayer = actualUpdatePlayerResponse.as(PlayerUpdateResponseDto.class);
 
         SoftAssert assertion = new SoftAssert();
         assertion.assertEquals(actualUpdatedPlayer.getAge(), Integer.valueOf(18),
@@ -58,11 +58,11 @@ public class VerifyUpdatePlayerTest extends BaseTest {
     public void shouldUpdateMultipleFields() {
         // create test player
         CreatePlayerRequestDto expectedTestPlayer = createValidPlayerHelper("user");
-        Response response = httpClient.createPlayer(expectedTestPlayer, "supervisor");
+        Response expectedPlayerCreationResponse = httpClient.createPlayer(expectedTestPlayer, "supervisor");
 
-        assertEquals(response.getStatusCode(), 200, "Status code mismatch");
+        assertEquals(expectedPlayerCreationResponse.getStatusCode(), 200, "Status code mismatch");
 
-        CreatePlayerResponseDto createdTestPlayer = response.as(CreatePlayerResponseDto.class);
+        CreatePlayerResponseDto createdTestPlayer = expectedPlayerCreationResponse.as(CreatePlayerResponseDto.class);
         testPlayerId = createdTestPlayer.getId();
 
         // update player
@@ -90,11 +90,11 @@ public class VerifyUpdatePlayerTest extends BaseTest {
     public void failUpdateWhenEditorHasNoPermission() {
         // create test player
         CreatePlayerRequestDto expectedTestPlayer = createValidPlayerHelper("user");
-        Response response = httpClient.createPlayer(expectedTestPlayer, "supervisor");
+        Response createPlayerResponse = httpClient.createPlayer(expectedTestPlayer, "supervisor");
 
-        assertEquals(response.getStatusCode(), 200, "Status code mismatch");
+        assertEquals(createPlayerResponse.getStatusCode(), 200, "Status code mismatch");
 
-        CreatePlayerResponseDto createdTestPlayer = response.as(CreatePlayerResponseDto.class);
+        CreatePlayerResponseDto createdTestPlayer = createPlayerResponse.as(CreatePlayerResponseDto.class);
         testPlayerId = createdTestPlayer.getId();
 
         // update player
@@ -113,11 +113,11 @@ public class VerifyUpdatePlayerTest extends BaseTest {
     public void failUpdateWhenDataIsInvalid() {
         // create test player
         CreatePlayerRequestDto expectedTestPlayer = createValidPlayerHelper("user");
-        Response response = httpClient.createPlayer(expectedTestPlayer, "supervisor");
+        Response createPlayerResponse = httpClient.createPlayer(expectedTestPlayer, "supervisor");
 
-        assertEquals(response.getStatusCode(), 200, "Status code mismatch");
+        assertEquals(createPlayerResponse.getStatusCode(), 200, "Status code mismatch");
 
-        CreatePlayerResponseDto createdTestPlayer = response.as(CreatePlayerResponseDto.class);
+        CreatePlayerResponseDto createdTestPlayer = createPlayerResponse.as(CreatePlayerResponseDto.class);
         testPlayerId = createdTestPlayer.getId();
 
         // update player
