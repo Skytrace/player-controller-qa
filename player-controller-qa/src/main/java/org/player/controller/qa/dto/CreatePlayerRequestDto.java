@@ -3,21 +3,12 @@ package org.player.controller.qa.dto;
 import java.util.Objects;
 
 public class CreatePlayerRequestDto {
-    private Long id;
     private String gender;
     private Integer age;
     private String login;
     private String password;
     private String role;
     private String screenName;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getGender() {
         return gender;
@@ -72,8 +63,7 @@ public class CreatePlayerRequestDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CreatePlayerRequestDto userItem = (CreatePlayerRequestDto) o;
-        return Objects.equals(id, userItem.id) &&
-                Objects.equals(gender, userItem.gender) &&
+        return Objects.equals(gender, userItem.gender) &&
                 Objects.equals(age, userItem.age) &&
                 Objects.equals(login, userItem.login) &&
                 Objects.equals(password, userItem.password) &&
@@ -83,13 +73,12 @@ public class CreatePlayerRequestDto {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, gender, age, login, password, role, screenName);
+        return Objects.hash(gender, age, login, password, role, screenName);
     }
 
     @Override
     public String toString() {
         return "UserItem{" +
-                "id=" + id +
                 ", gender='" + gender + '\'' +
                 ", age=" + age +
                 ", login='" + login + '\'' +
