@@ -2,7 +2,7 @@ package org.player.controller.qa.dto;
 
 import java.util.Objects;
 
-public class PlayerItem {
+public class PlayerItemResponseDto {
     private Long id;
     private String screenName;
     private String gender;
@@ -53,7 +53,7 @@ public class PlayerItem {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PlayerItem that = (PlayerItem) o;
+        PlayerItemResponseDto that = (PlayerItemResponseDto) o;
         return Objects.equals(age, that.age) &&
                 Objects.equals(gender, that.gender) &&
                 Objects.equals(id, that.id) &&

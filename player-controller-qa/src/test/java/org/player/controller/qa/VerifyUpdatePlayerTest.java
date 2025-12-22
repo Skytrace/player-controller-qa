@@ -20,10 +20,6 @@ public class VerifyUpdatePlayerTest extends BaseTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(VerifyUpdatePlayerTest.class);
     private Long createdPlayerId;
 
-    /* =========================
-       POSITIVE
-       ========================= */
-
     @Test(groups = "updatePlayer")
     public void updatePlayerAgeOnlyOneField() {
         // create test player
@@ -93,10 +89,6 @@ public class VerifyUpdatePlayerTest extends BaseTest {
 
         assertion.assertAll();
     }
-
-    /* =========================
-       NEGATIVE
-       ========================= */
 
     @Test(groups = "updatePlayer")
     public void failUpdateWhenEditorHasNoPermission() {

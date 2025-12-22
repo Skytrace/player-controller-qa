@@ -2,15 +2,15 @@ package org.player.controller.qa.dto;
 
 import java.util.List;
 
-public class Players {
+public class PlayersResponseDto {
 
-    List<PlayerItem> players;
+    List<PlayerItemResponseDto> players;
 
-    public List<PlayerItem> getPlayers() {
+    public List<PlayerItemResponseDto> getPlayers() {
         return players;
     }
 
-    public void setPlayers(List<PlayerItem> players) {
+    public void setPlayers(List<PlayerItemResponseDto> players) {
         this.players = players;
     }
 

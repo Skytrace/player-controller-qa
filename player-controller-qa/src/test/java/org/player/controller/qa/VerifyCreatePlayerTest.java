@@ -16,16 +16,12 @@ public class VerifyCreatePlayerTest extends BaseTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(VerifyCreatePlayerTest.class);
     private Long createdPlayerUserId;
 
-    /* =========================
-       POSITIVE
-       ========================= */
-
     @Test(groups = "createPlayer")
     public void shouldCreatePlayerValidAdminRole() {
         CreatePlayerRequestDto expected = validPlayer("admin");
         Response response = httpClient.createPlayer(expected, "supervisor");
 
-        assertEquals(response.getStatusCode(), 200, "Status code mismatch");
+        assertEquals(response.getStatusCode(), 200, "Actual status code is not as expected");
 
         CreatePlayerRequestDto actual = response.as(CreatePlayerRequestDto.class);
         createdPlayerUserId = actual.getId();
@@ -33,11 +29,11 @@ public class VerifyCreatePlayerTest extends BaseTest {
         assertTrue(createdPlayerUserId != null && createdPlayerUserId > 0, "Player id is invalid");
 
         SoftAssert assertion = new SoftAssert();
-        assertion.assertEquals(actual.getAge(), expected.getAge(), "Age mismatch");
-        assertion.assertEquals(actual.getGender(), expected.getGender(), "Gender mismatch");
-        assertion.assertEquals(actual.getLogin(), expected.getLogin(), "Login mismatch");
-        assertion.assertEquals(actual.getRole(), expected.getRole(), "Role mismatch");
-        assertion.assertEquals(actual.getScreenName(), expected.getScreenName(), "ScreenName mismatch");
+        assertion.assertEquals(actual.getAge(), expected.getAge(), "Actual age is not as expected");
+        assertion.assertEquals(actual.getGender(), expected.getGender(), "Actual gender is not as expected");
+        assertion.assertEquals(actual.getLogin(), expected.getLogin(), "Actual login is not as expected");
+        assertion.assertEquals(actual.getRole(), expected.getRole(), "Actual role is not as expected");
+        assertion.assertEquals(actual.getScreenName(), expected.getScreenName(), "Actual screen name is not as expected");
         assertion.assertAll();
     }
 
@@ -46,17 +42,13 @@ public class VerifyCreatePlayerTest extends BaseTest {
         CreatePlayerRequestDto expected = validPlayer("user");
         Response response = httpClient.createPlayer(expected, "supervisor");
 
-        assertEquals(response.getStatusCode(), 200);
+        assertEquals(response.getStatusCode(), 200, "Actual status code is not as expected");
 
         CreatePlayerRequestDto actual = response.as(CreatePlayerRequestDto.class);
         createdPlayerUserId = actual.getId();
 
         assertTrue(createdPlayerUserId != null && createdPlayerUserId > 0);
     }
-
-    /* =========================
-       NEGATIVE: AGE ( >16 and <60 )
-       ========================= */
 
     @Test(groups = "createPlayer")
     public void shouldFailCreateWhenAgeIsLowest() {
@@ -67,7 +59,7 @@ public class VerifyCreatePlayerTest extends BaseTest {
         captureUnexpectedCreation(actualResponse);
 
         assertTrue(actualResponse.getStatusCode() == 400 || actualResponse.getStatusCode() == 403,
-                "Expected validation error for age=16 but got " + actualResponse.getStatusCode());
+                "Expected validation error for age = 16 but got " + actualResponse.getStatusCode());
     }
 
     @Test(groups = "createPlayer")
@@ -81,10 +73,6 @@ public class VerifyCreatePlayerTest extends BaseTest {
         assertTrue(actualResponse.getStatusCode() == 400 || actualResponse.getStatusCode() == 403,
                 "Expected validation error for age=60 but got " + actualResponse.getStatusCode());
     }
-
-    /* =========================
-       NEGATIVE: GENDER ( male/female )
-       ========================= */
 
     @Test(groups = "createPlayer")
     public void shouldFailCreateWhenGenderIsInvalid() {
@@ -110,10 +98,6 @@ public class VerifyCreatePlayerTest extends BaseTest {
                 "Expected validation error for gender=MALE but got " + actualResponse.getStatusCode());
     }
 
-    /* =========================
-       NEGATIVE: ROLE ( admin/user only )
-       ========================= */
-
     @Test(groups = "createPlayer")
     public void shouldFailCreateWhenRoleIsInvalid() {
         CreatePlayerRequestDto expectedPlayer = validPlayer("randomRole");
@@ -125,10 +109,6 @@ public class VerifyCreatePlayerTest extends BaseTest {
                 "Expected validation error for role but got " + actualResponse.getStatusCode());
     }
 
-    /* =========================
-       NEGATIVE: EDITOR ( only supervisor/admin can create )
-       ========================= */
-
     @Test(groups = "createPlayer")
     public void shouldFailCreateWhenEditorHasNoPermission() {
         CreatePlayerRequestDto expectedPlayer = validPlayer("user");
@@ -139,10 +119,6 @@ public class VerifyCreatePlayerTest extends BaseTest {
         assertEquals(actualResponse.getStatusCode(), 403,
                 "Expected 403 for editor=user but got " + actualResponse.getStatusCode());
     }
-
-    /* =========================
-       NEGATIVE: PASSWORD ( latin letters + digits, 7..15 )
-       ========================= */
 
     @Test(groups = "createPlayer")
     public void shouldFailCreateWhenPasswordTooShort() {
@@ -192,10 +168,6 @@ public class VerifyCreatePlayerTest extends BaseTest {
                 "Expected validation error for password non-latin but got " + actualResponse.getStatusCode());
     }
 
-    /* =========================
-       NEGATIVE: LOGIN UNIQUE
-       ========================= */
-
     @Test(groups = "createPlayer")
     public void shouldFailCreateWhenLoginIsNotUnique() {
         String dupLogin = "dup_login_" + System.currentTimeMillis();
@@ -225,10 +197,6 @@ public class VerifyCreatePlayerTest extends BaseTest {
                         creatSecondUserActualResponse.getStatusCode() == 409,
                 "Expected validation error for duplicate login but got " + creatSecondUserActualResponse.getStatusCode());
     }
-
-    /* =========================
-       NEGATIVE: SCREEN NAME UNIQUE
-       ========================= */
 
     @Test(groups = "createPlayer")
     public void shouldFailCreateWhenScreenNameIsNotUnique() {
@@ -260,10 +228,6 @@ public class VerifyCreatePlayerTest extends BaseTest {
                         secondPlayerId.getStatusCode());
     }
 
-    /* =========================
-       CLEANUP: after EACH test
-       ========================= */
-
     @AfterMethod(alwaysRun = true)
     public void deleteCreatedPlayer() {
         if (createdPlayerUserId != null) {
@@ -272,10 +236,6 @@ public class VerifyCreatePlayerTest extends BaseTest {
             LOGGER.info("Cleanup delete statusCode = {}", deleteResponse.getStatusCode());
         }
     }
-
-    /* =========================
-       HELPERS
-       ========================= */
 
     private CreatePlayerRequestDto validPlayer(String role) {
         CreatePlayerRequestDto player = new CreatePlayerRequestDto();

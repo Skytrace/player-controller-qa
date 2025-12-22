@@ -2,8 +2,8 @@ package org.player.controller.qa;
 
 import io.restassured.response.Response;
 import org.player.controller.qa.base.BaseTest;
-import org.player.controller.qa.dto.PlayerItem;
-import org.player.controller.qa.dto.Players;
+import org.player.controller.qa.dto.PlayerItemResponseDto;
+import org.player.controller.qa.dto.PlayersResponseDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -25,7 +25,7 @@ public class VerifyGetAllPlayerTest extends BaseTest {
 
         assertEquals(actualResult.getStatusCode(), 200, "Expected status code 200");
 
-        Players responseData = actualResult.as(Players.class);
+        PlayersResponseDto responseData = actualResult.as(PlayersResponseDto.class);
         Assert.assertNotNull(responseData.getPlayers(), "Players list should not be null");
         assertTrue(responseData.getPlayers().size() > 0, "Players list should contain more than 1 element");
 
@@ -38,12 +38,12 @@ public class VerifyGetAllPlayerTest extends BaseTest {
 
         assertEquals(response.getStatusCode(), 200, "Expected status code 200");
 
-        Players responseData = response.as(Players.class);
-        List<PlayerItem> players = responseData.getPlayers();
+        PlayersResponseDto responseData = response.as(PlayersResponseDto.class);
+        List<PlayerItemResponseDto> players = responseData.getPlayers();
 
         assertTrue(players.size() > 0, "Players list should not be empty");
 
-        for (PlayerItem player : players) {
+        for (PlayerItemResponseDto player : players) {
             assertTrue(player.getId() > 0, "Player id should be positive");
             assertNotNull(player.getScreenName(), "Player screenName should not be null");
             assertFalse(player.getScreenName().isEmpty(), "Player screenName should not be empty");
@@ -58,13 +58,13 @@ public class VerifyGetAllPlayerTest extends BaseTest {
         Response response = httpClient.getPlayers();
         assertEquals(response.getStatusCode(), 200, "Expected status code 200");
 
-        Players responseData = response.as(Players.class);
-        List<PlayerItem> players = responseData.getPlayers();
+        PlayersResponseDto responseData = response.as(PlayersResponseDto.class);
+        List<PlayerItemResponseDto> players = responseData.getPlayers();
 
         Assert.assertTrue(players.size() > 0, "Players list should not be empty");
 
         Set<Long> ids = new HashSet<>();
-        for (PlayerItem player : players) {
+        for (PlayerItemResponseDto player : players) {
             ids.add(player.getId());
         }
 
