@@ -6,6 +6,7 @@ import org.player.controller.qa.dto.CreatePlayerRequestDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -29,8 +30,9 @@ public class VerifyDeletePlayerTest extends BaseTest {
         assertTrue(actualPlayer.getId() > 0, "Incorrect userId value");
 
         LOGGER.info("Actual test player has been created: {}", actualPlayer);
+        int actualStatusCode = httpClient.deletePlayer(actualPlayer.getId(), "supervisor").statusCode();
 
-        httpClient.deletePlayer(actualPlayer.getId(), "supervisor").then().statusCode(204);
+        Assert.assertEquals(actualStatusCode, 204, "Delete User: Actual status code is not as expected");
     }
 
     @Test(groups = "deletePlayerByIdAsString")
@@ -47,15 +49,6 @@ public class VerifyDeletePlayerTest extends BaseTest {
 
         // here passing the player id as a string
         httpClient.deletePlayer(String.valueOf(actualPlayer.getId()), "supervisor").then().statusCode(400);
-    }
-
-    @AfterTest(groups = "deletePlayerByIdAsString")
-    public void cleanPlayerFromDeletePlayerByIdAsStringTest() {
-        LOGGER.info("Time to delete test player with id {}", testPlayerId);
-        if (testPlayerId != null) {
-            httpClient.deletePlayer(testPlayerId, "supervisor").then().statusCode(204);
-            LOGGER.info("Test User with id - {}, successfully deleted", testPlayerId);
-        }
     }
 
     @Test
@@ -87,10 +80,19 @@ public class VerifyDeletePlayerTest extends BaseTest {
         Assert.assertEquals(actualStatusCode, expectedStatusCode, "Actual status code is not as expected");
     }
 
+    @AfterTest(groups = "deletePlayerByIdAsString")
+    public void cleanPlayerFromDeletePlayerByIdAsStringTest() {
+        LOGGER.info("Time to delete test player with id {}", testPlayerId);
+        if (testPlayerId != null) {
+            httpClient.deletePlayer(testPlayerId, "supervisor").then().statusCode(204);
+            LOGGER.info("Test User with id - {}, successfully deleted", testPlayerId);
+        }
+    }
+
     @DataProvider
     public Object[][] getValidationDataForDeletePlayerTest() {
         return new Object[][]{
-                { "notNumberId" }, // checking on String
+                { "someString" }, // checking on String
                 { null },          // checking on null
                 { "" }             // checking on empty String
         };

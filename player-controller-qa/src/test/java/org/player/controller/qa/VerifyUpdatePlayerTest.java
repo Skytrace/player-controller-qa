@@ -145,7 +145,7 @@ public class VerifyUpdatePlayerTest extends BaseTest {
         CreatePlayerRequestDto player = new CreatePlayerRequestDto();
         player.setAge(25);
         player.setGender("male");
-        player.setLogin("testLoginUserVcpt");
+        player.setLogin("testLoginUserUcpt");
         player.setPassword("Test1234");
         player.setRole(role);
         player.setScreenName("screen_vcpt");
