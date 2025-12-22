@@ -2,15 +2,13 @@ package org.player.controller.qa.http;
 
 import io.restassured.response.Response;
 import org.player.controller.qa.dto.CreatePlayerRequestDto;
-import org.player.controller.qa.dto.PlayerUpdateRequestDto;
-
 import java.util.Map;
 
 public class PlayerHttpClient extends BaseHttpClient {
 
     public Response getPlayers() {
         return getHttpClient()
-                .get("/player/get/all");
+                .get(PROPERTIES.getProperty("get.all.players"));
     }
 
     public Response createPlayer(CreatePlayerRequestDto user, String editor) {
@@ -21,13 +19,13 @@ public class PlayerHttpClient extends BaseHttpClient {
                 .queryParam("password", user.getPassword())
                 .queryParam("role", user.getRole())
                 .queryParam("screenName", user.getScreenName())
-                .get("/player/create/" + editor);
+                .get(PROPERTIES.getProperty("create.player") + editor);
     }
 
     public Response updatePlayer(Map<String, Object> user, String editor, Long userId) {
         return getHttpClient()
                 .body(user)
-                .patch("/player/update/" + editor + "/" + userId);
+                .patch(PROPERTIES.getProperty("update.player") + editor + "/" + userId);
     }
 
     public Response deletePlayer(Object id, String editor) {
@@ -37,7 +35,7 @@ public class PlayerHttpClient extends BaseHttpClient {
 
         return getHttpClient()
                 .body(body)
-                .delete("/player/delete/" + editor);
+                .delete(PROPERTIES.getProperty("delete.player") + editor);
     }
 
 }
